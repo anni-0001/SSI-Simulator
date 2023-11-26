@@ -12,9 +12,13 @@ import pickle
 tunnel_build_delay = lambda: random.uniform(0.5,1.5)
 tunnel_down_delay = lambda: random.uniform(0.5,1.5)
 
-
-
-def build_tunnel(tunnel_type, socat_port=80):
+def permissions(device_num):
+    # chmod_val = 700
+    subprocess.run("chmod 777 /purple/results")
+    print(subprocess.run("ls -l /purple/"))
+    
+# runnning proxy listeners in build tunnel & start listners 
+def build_tunnel(tunnel_type, socat_port=80, icmp_port=8888):
     """Construct tunnel iteratively
     """
     session_name = "mySession"
@@ -28,8 +32,17 @@ def build_tunnel(tunnel_type, socat_port=80):
         elif tunnel == "socat":
             cmd = f"socat FILE:\`tty\`,raw,echo=0 tcp-connect:{hostname}:{socat_port}"
         # add additional protocol tunnel establishing stuff here
+        elif tunnel == "icmp":
+            cmd = f"ssh -tt -p {icmp_port} {hostname}"
+
+            # start proxy - or do I want to start server as the listener? 
+            # the start_listner() function should be the server along with 
+
+
+            # starting the proxy
+            cmd =f"ptunnel -lp 8888 -da {hostname} -dp 22"
         #elif tunnel == "DNS":
-        #    cmd = f"dnstunnel {hostname}" 
+        #    cmd = f"dnstunnel {hostname}"  - OR run sript here to open port for listener& create ssh tunnel
         else:
             raise UserWarning(f"Invalid tunnel type {tunnel}.")
 
@@ -75,8 +88,8 @@ def send_commands(session_name,
         print(f" [{i+1}/{command_count}] Sleep for {delay_target}s.")
         time.sleep(delay_target)
 
-
-def start_listeners(socat_port=80):
+# server only
+def start_listeners(socat_port=80, icmp_port=2333):
     """Initialize listening services on stepping-stone hosts
     """
     # start SSH listener daemon
@@ -87,6 +100,19 @@ def start_listeners(socat_port=80):
     socat_cmd = f'socat tcp-listen:{socat_port},reuseaddr,fork EXEC:/bin/bash,pty,stderr,setsid,sigint,sane'
     subprocess.run(f'tmux send-keys -t socat.0 "{socat_cmd}" Enter', shell=True)
 
+# start listener 
+# setting up proxy - replace the IP address with the host IP +2
+    subprocess.run(f"tmux new -d -s icmp", shell=True)
+    ptunnel_proxy_cmd = f"ptunnel -lp {icmp_port} -da 172.18.0.2 -dp 22"
+    ptunnel_server_cmd = f"ptunnel"
+
+
+    # starting the proxy
+    subprocess.run(f'tmux send-keys -t icmp.0 "{ptunnel_proxy_cmd}" Enter', shell=True)
+    subprocess.run(f'tmux send-keys -t icmp.0 "{ptunnel_server_cmd}" Enter', shell=True)
+
+
+# make tmux pane for listener & server & proxy - start 
     # start dns tunnel listening script
     #subprocess.run(f"tmux new -d -s dnslistener", shell=True)
     #dns_cmd = f"bash dnstunnel.sh"
@@ -129,20 +155,27 @@ if __name__ == "__main__":
     scan_time = sys.argv[3]
     devices = sys.argv[4]
 
+ 
+
     # setup directory & file paths
     results_root = f"/purple/results/{experiment_num}"
     if not os.path.exists(results_root):
-        os.makedirs(results_root)
+        # subprocess.run("sudo os.makedirs(results_root)")
+        os.makedirs(results_root, exist_ok=True)
     tcpdump_root = os.path.join(results_root, "tcpdump")
     if not os.path.exists(tcpdump_root):
-        os.makedirs(tcpdump_root)
+        os.makedirs(tcpdump_root, exist_ok=True)
 
     pcap_loc = os.path.join(tcpdump_root, f"dev{device_num}.pcap")
 
+
+# problem on my mac - check volumes permissions on my personal machine to write to
+
+    # permissions(device_num)
     # build tcpdump capture command
     net_device = "eth0"
     ip_cmd = f"ip -4 addr show {net_device} | grep -oP '(?<=inet\s)\d+(\.\d+){3}'"
-    tcpdump_cmd = f"timeout {scan_time} tcpdump -i {net_device} -U -w {pcap_loc}"# -n host $({ip_cmd})"
+    tcpdump_cmd = f"sudo timeout {scan_time} tcpdump -i {net_device} -U -w {pcap_loc}"# -n host $({ip_cmd})"
 
     socat_port = 80
     
@@ -158,6 +191,7 @@ if __name__ == "__main__":
         # build tunnel
         # tunnel is protocols are randomly selected for each hop
         tunnel = tunnel_randomizer((int(devices)-1), ["socat", "ssh"])
+        # this function opesn client listenter points then executing ssh commands
         session_name = build_tunnel(tunnel, socat_port = socat_port)
 
         # log tunnel protocol info to results directory

@@ -11,6 +11,8 @@ RUN passwd -d root
 # ---------listening ports
 EXPOSE 22
 EXPOSE 80
+EXPOSE 8888
+EXPOSE 2323
 
 # --------ssh session configuration
 RUN mkdir ~/.ssh
@@ -26,5 +28,10 @@ RUN echo 'alias a="for ((c=1; c<n-2; c ++)); do echo -n '0'; done; echo -n '\n';
 
 # --------docker-external.sh 
 COPY internal.py /opt/
-RUN chmod +x /opt/internal.py
+
+RUN mkdir -p /purple
+RUN chmod -R 777 /purple
+
+# RUN chmod 777 /purple
+RUN chmod 777 /opt/internal.py
 COPY cmd.txt /opt/

@@ -52,7 +52,7 @@ echo ""
 
 # makes uniform scan_time vars in .env for all experiements
 touch .env
-sed -i "1c\\SCAN_TIME=$SCAN_TIME" .env
+# sed -i "1c\\SCAN_TIME=$SCAN_TIME" .env
 
 while [ $round -le $TOTAL_ROUNDS ]
 do
@@ -75,12 +75,13 @@ do
 
     # start up docker containers
     echo "---create env---"
-    docker compose build --quiet
-    docker compose up --wait
+    # docker compose up --build --quiet
+    docker compose up --build --wait
 
     echo "---dev1 log---"
     # wait till dev1 is done 
-    docker attach --no-stdin dev1
+    # docker attach --no-stdin dev1
+    docker logs dev1
     exitcode=$(docker wait dev1)
     echo " [*] dev1 exited with $exitcode"
     echo " [*] stopping & removing containers"

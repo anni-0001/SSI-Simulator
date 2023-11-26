@@ -52,7 +52,7 @@ write_entry () {
     echo '      - '"${SHARED_VOLUME}"':/purple' >> $OUT
     echo "    cap_add:" >> $OUT
     echo "      -  NET_ADMIN" >> $OUT
-    echo "    command: python3 /opt/internal.py $1 ${experiment_num} ${scan_time} $z 0" >> $OUT
+    echo "    command: sudo python3 /opt/internal.py $1 ${experiment_num} ${scan_time} $z 0" >> $OUT
     if [ $2 ]; then
         echo "    depends_on:" >> $OUT
         echo "      - dev$2" >> $OUT
