@@ -24,7 +24,7 @@ START_HTTP_PORT=800$z
 #iaddr=$1+1
 ipV4="172.50.0.$(($z+1))"
 
-SHARED_VOLUME_HOME=$SHARED_VOLUME:/purple/
+SHARED_VOLUME_HOME=$SHARED_VOLUME:/opt/purple/
 OUT=docker-compose.yml
 
 # Create the docker-compose.yml file

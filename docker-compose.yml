@@ -1,5 +1,26 @@
 version: '3'
 services:
+  dev4:
+    container_name: dev4
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "2204:22"
+      - "9994:9000"
+      - "8004:80"
+    networks: 
+       SSID:
+          ipv4_address: 172.50.0.5
+    hostname: dev4
+    volumes:
+      - /Users/annika/Documents/SSI-Simulator:/purple
+    cap_add:
+      -  NET_ADMIN
+    command: sudo python3 /opt/internal.py 4 1 30 4 0
+    stdin_open: true
+    tty: true
+              
   dev3:
     container_name: dev3
     build:
@@ -17,7 +38,9 @@ services:
       - /Users/annika/Documents/SSI-Simulator:/purple
     cap_add:
       -  NET_ADMIN
-    command: sudo python3 /opt/internal.py 3 1 20 3 0
+    command: sudo python3 /opt/internal.py 3 1 30 4 0
+    depends_on:
+      - dev4
     stdin_open: true
     tty: true
               
@@ -38,7 +61,7 @@ services:
       - /Users/annika/Documents/SSI-Simulator:/purple
     cap_add:
       -  NET_ADMIN
-    command: sudo python3 /opt/internal.py 2 1 20 3 0
+    command: sudo python3 /opt/internal.py 2 1 30 4 0
     depends_on:
       - dev3
     stdin_open: true
@@ -61,7 +84,7 @@ services:
       - /Users/annika/Documents/SSI-Simulator:/purple
     cap_add:
       -  NET_ADMIN
-    command: sudo python3 /opt/internal.py 1 1 20 3 0
+    command: sudo python3 /opt/internal.py 1 1 30 4 0
     depends_on:
       - dev2
     stdin_open: true

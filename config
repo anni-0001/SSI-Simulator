@@ -20,3 +20,10 @@ IdentityFile ~/.ssh/id_rsa
 UserKnownHostsFile=/dev/null
 User root
  
+Host dev4
+Hostname 172.50.0.5
+StrictHostKeyChecking no
+IdentityFile ~/.ssh/id_rsa
+UserKnownHostsFile=/dev/null
+User root
+ 

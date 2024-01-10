@@ -29,9 +29,13 @@ RUN echo 'alias a="for ((c=1; c<n-2; c ++)); do echo -n '0'; done; echo -n '\n';
 # --------docker-external.sh 
 COPY internal.py /opt/
 
-RUN mkdir -p /purple
-RUN chmod -R 777 /purple
+# RUN mkdir -p /purple/
+# RUN chmod -R 777 /purple
+# RUN chmod -R 777 /purple/results
 
 # RUN chmod 777 /purple
 RUN chmod 777 /opt/internal.py
+RUN mkdir /opt/purple
+RUN chmod 777 /opt/purple
+COPY stats.pkl /opt/purple/
 COPY cmd.txt /opt/

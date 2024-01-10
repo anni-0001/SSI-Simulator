@@ -12,11 +12,7 @@ import pickle
 tunnel_build_delay = lambda: random.uniform(0.5,1.5)
 tunnel_down_delay = lambda: random.uniform(0.5,1.5)
 
-def permissions(device_num):
-    # chmod_val = 700
-    subprocess.run("chmod 777 /purple/results")
-    print(subprocess.run("ls -l /purple/"))
-    
+
 # runnning proxy listeners in build tunnel & start listners 
 def build_tunnel(tunnel_type, socat_port=80, icmp_port=8888):
     """Construct tunnel iteratively
@@ -151,20 +147,33 @@ if __name__ == "__main__":
         raise UserWarning("Please use five or more parameters")
     
     device_num = sys.argv[1]
+    print("device number: ", device_num)
     experiment_num = sys.argv[2]
+    print("experiment number ", experiment_num)
     scan_time = sys.argv[3]
+    print("scan time: ", scan_time)
     devices = sys.argv[4]
+    print("device number: ", devices)
 
  
 
     # setup directory & file paths
-    results_root = f"/purple/results/{experiment_num}"
-    if not os.path.exists(results_root):
-        # subprocess.run("sudo os.makedirs(results_root)")
-        os.makedirs(results_root, exist_ok=True)
+
+
+
+    # Setup directory & file paths
+    results_root = f"/opt/purple/results/{experiment_num}"
+    os.makedirs(results_root, exist_ok=True)
+
     tcpdump_root = os.path.join(results_root, "tcpdump")
-    if not os.path.exists(tcpdump_root):
-        os.makedirs(tcpdump_root, exist_ok=True)
+    os.makedirs(tcpdump_root, exist_ok=True)
+    # results_root = f"/opt/purple/results/{experiment_num}"
+    # if not os.path.exists(results_root):
+    #     # subprocess.run("sudo os.makedirs(results_root)")
+    #     os.makedirs(results_root, exist_ok=True)
+    # tcpdump_root = os.path.join(results_root, "tcpdump")
+    # if not os.path.exists(tcpdump_root):
+    #     os.makedirs(tcpdump_root, exist_ok=True)
 
     pcap_loc = os.path.join(tcpdump_root, f"dev{device_num}.pcap")
 
@@ -206,7 +215,8 @@ if __name__ == "__main__":
         #send_commands(session_name, cmd_opts=cmds, command_count=random.randint(1,20))
 
         # send commands via tunnel
-        with open('/purple/stats.pkl', 'rb') as fi:
+        # subprocess.run(["touch", "/opt/purple/stats.pkl"])
+        with open('/opt/purple/stats.pkl', 'rb') as fi:
             stats = pickle.load(fi)
         send_commands(session_name, 
                       snddist = stats['send'], 

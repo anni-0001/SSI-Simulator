@@ -80,8 +80,8 @@ do
 
     echo "---dev1 log---"
     # wait till dev1 is done 
-    # docker attach --no-stdin dev1
-    docker logs dev1
+    docker attach --no-stdin dev1
+    echo $(docker logs dev1)
     exitcode=$(docker wait dev1)
     echo " [*] dev1 exited with $exitcode"
     echo " [*] stopping & removing containers"
