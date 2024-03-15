@@ -1,5 +1,5 @@
 FROM ubuntu
 
 RUN apt update && apt install iproute2 sudo python3 git coreutils tcpdump vim tmux tmuxinator pip docker net-tools -y
-RUN apt install netcat ncat socat openssh-server autoconf automake autotools-dev sshpass ptunnel iputils-ping -y
+RUN apt install netcat ncat socat openssh-server autoconf automake autotools-dev sshpass ptunnel-ng iputils-ping -y
 RUN pip install paramiko pexpect 

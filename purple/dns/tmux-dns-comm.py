@@ -5,6 +5,11 @@ import pexpect
 import socket
 import pickel
 
+
+
+# this file would need to be integreted into how commands are run with the stats.pkl
+# since it enables cmd execution into the dnscat terminal 
+
 hostname = socket.gethostname()
 print("Hostname:", hostname)
 
@@ -45,6 +50,9 @@ if hostname == 'server':
     print("Session 2 initiated")
 
     time.sleep(5)
+
+    # **** where the commands can be entered into from the stats.pkl in a loop
+    # could be figured out to do ssh - encountered some psudo terminal issues
     tmux_process.sendline('ls')
 
 

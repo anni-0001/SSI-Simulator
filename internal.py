@@ -47,12 +47,14 @@ def build_tunnel(tunnel_type, socat_port=80, icmp_port=8888):
 
 
             # starting the proxy
-            cmd =f"ptunnel -lp 8888 -da {hostname} -dp 22"
+            cmd =f"ptunnel-ng -lp 8888 -da {hostname} -dp 22"
             ssh_cmd = f"ssh -tt -p {icmp_port} {hostname}"
 
         elif tunnel == "DNS":
-        #    cmd = f"dnstunnel {hostname}"  - OR run sript here to open port for listener& create ssh tunnel
-            cmd = 
+            # starts the server
+            cmd = "ruby dnscat2.rb --secret=abc"
+            # client cmd = f"./dnscat --dns server={server_ip},port=53 --secret=abc"
+            # to run commands - must be run from the server in a seperate session (found in tmux_dns_comm.py)
         else:
             raise UserWarning(f"Invalid tunnel type {tunnel}.")
 
