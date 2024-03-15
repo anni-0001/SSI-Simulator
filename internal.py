@@ -12,6 +12,18 @@ import pickle
 tunnel_build_delay = lambda: random.uniform(0.5,1.5)
 tunnel_down_delay = lambda: random.uniform(0.5,1.5)
 
+def ICMP_tunnel_tunnel(icmp_port=5555):
+    
+    hostname = f'dev{i+2}'
+    cmd = f"ssh -tt -p {icmp_port} {hostname}"
+
+            # start proxy - or do I want to start server as the listener? 
+            # the start_listner() function should be the server along with 
+
+
+            # starting the proxy
+    cmd =f"ptunnel -lp 8888 -da {hostname} -dp 22"    
+
 
 # runnning proxy listeners in build tunnel & start listners 
 def build_tunnel(tunnel_type, socat_port=80, icmp_port=8888):
@@ -29,7 +41,6 @@ def build_tunnel(tunnel_type, socat_port=80, icmp_port=8888):
             cmd = f"socat FILE:\`tty\`,raw,echo=0 tcp-connect:{hostname}:{socat_port}"
         # add additional protocol tunnel establishing stuff here
         elif tunnel == "icmp":
-            cmd = f"ssh -tt -p {icmp_port} {hostname}"
 
             # start proxy - or do I want to start server as the listener? 
             # the start_listner() function should be the server along with 
@@ -37,8 +48,11 @@ def build_tunnel(tunnel_type, socat_port=80, icmp_port=8888):
 
             # starting the proxy
             cmd =f"ptunnel -lp 8888 -da {hostname} -dp 22"
-        #elif tunnel == "DNS":
+            ssh_cmd = f"ssh -tt -p {icmp_port} {hostname}"
+
+        elif tunnel == "DNS":
         #    cmd = f"dnstunnel {hostname}"  - OR run sript here to open port for listener& create ssh tunnel
+            cmd = 
         else:
             raise UserWarning(f"Invalid tunnel type {tunnel}.")
 

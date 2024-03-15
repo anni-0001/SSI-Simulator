@@ -41,6 +41,7 @@ write_entry () {
     echo "      - \"${START_SSH_PORT}:22\"" >> $OUT
     echo "      - \"${START_TCP_PORT}:9000\"" >> $OUT
     echo "      - \"${START_HTTP_PORT}:80\"">> $OUT
+    echo "      - \"${START_ICMP_PORT}:5555\"">> $OUT    
     START_SSH_PORT=$(($START_SSH_PORT-1))
     START_TCP_PORT=$(($START_TCP_PORT-1))
     START_HTTP_PORT=$(($START_HTTP_PORT-1))

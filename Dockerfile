@@ -2,7 +2,7 @@
 FROM ubuntu
 
 RUN apt update && apt install iproute2 sudo python3 coreutils tcpdump vim tmux tmuxinator pip docker net-tools -y
-RUN apt install netcat ncat socat openssh-server sshpass -y
+RUN apt install netcat ncat socat openssh-server ptunnel-ng sshpass -y
 RUN pip install paramiko pexpect
 # ---------user configuration
 RUN echo 'root:password' | chpasswd
